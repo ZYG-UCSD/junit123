@@ -8,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +27,46 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // get numbers and turn into ints
+                EditText et1 = (EditText) findViewById(R.id.et1);
+                EditText et2 = (EditText) findViewById(R.id.et2);
+                String str1 = et1.getText().toString();
+                String str2 = et2.getText().toString();
+                String str3 = "Number(s) invalid";
+
+                TextView result = (TextView)findViewById(R.id.result);
+                // try parse int,
+                int f1 = 0;
+                int f2 = 0;
+                try {
+                    f1 = Integer.parseInt(str1);
+                    f2 = Integer.parseInt(str2);
+                }
+                catch (NumberFormatException e) {
+                    result.setText(str3);
+                    return;
+                }
+                // try add and catch overflow
+                str3 = "Result invalid";
+                try {
+                    int num = sum(f1, f2);
+                    str3 = Integer.toString(num);
+                }
+                catch (ArithmeticException e) {
+                    result.setText(str3);
+                    return;
+                }
+
+
+
+
+                result.setText(str3);
             }
         });
     }
@@ -48,5 +91,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public int sum(int a, int b){
+        if (b > 0 ? a > Integer.MAX_VALUE - b
+                : a < Integer.MIN_VALUE - b) {
+            throw new ArithmeticException("overflow");
+        }
+        return a+b;
     }
 }

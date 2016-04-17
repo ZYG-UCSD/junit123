@@ -1,9 +1,8 @@
 package guo.junit123.test;
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.TextView;
+
 
 import guo.junit123.MainActivity;
-import guo.junit123.R;
 
 /**
  * Created by guozi on 2016/4/16.
@@ -15,12 +14,48 @@ public class JUnit_test extends ActivityInstrumentationTestCase2<MainActivity> {
         super(MainActivity.class);
     }
 
-    public void test_first(){
+    public void test_sum(){
         mainActivity = getActivity();
+        int a = 99999999;
+        int b = 77777777;
+        int result = mainActivity.sum(a,b);
+        assertEquals(result, a + b);
+    }
 
-        TextView textView = (TextView) mainActivity.findViewById(R.id.tv1);
-        String tester = textView.getText().toString();
+    public void test_overflow(){
+        mainActivity = getActivity();
+        int a = 2100000000;
+        int b = 2100000000;
+        try {
+            int result = mainActivity.sum(a, b);
+            fail();
+        }
+        catch(ArithmeticException e) {}
 
-        assertEquals("Hello World!", tester);
+    }
+
+    public void test_underflow(){
+        mainActivity = getActivity();
+        int a = -2100000000;
+        int b = -2100000000;
+        try {
+            int result = mainActivity.sum(a, b);
+            fail();
+        }
+        catch(ArithmeticException e) {
+            // success
+        }
+    }
+
+    public void test_special(){
+        mainActivity = getActivity();
+        int a = -2147483648;
+        int b = 2147483647;
+        int c = 0;
+
+        int result = mainActivity.sum(a, b);
+        assertEquals(result, a + b);
+        result = mainActivity.sum(b, c);
+        assertEquals(result, b + c);
     }
 }
